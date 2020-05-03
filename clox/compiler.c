@@ -204,7 +204,7 @@ static void number() {
 }
 
 static void string() {
-	emitConstant(OBJ_VAL(copyString(parser.previous.start + 1,parser.previous.length - 2)));
+	emitConstant(OBJ_VAL(copyString(parser.previous.start + 1, parser.previous.length - 2)));
 }
 
 static void unary() {
@@ -293,6 +293,12 @@ static void expression() {
 	parsePrecedence(PREC_ASSIGNMENT);
 }
 
+static void expressionStatement() {
+	expression();
+	consume(TOKEN_SEMICOLON, "Expect ';' after expression.");
+	emitByte(OP_POP);
+}
+
 static void printStatement() {
 	expression();
 	consume(TOKEN_SEMICOLON, "Expect ';' after value");
@@ -302,6 +308,9 @@ static void printStatement() {
 static void statement() {
 	if (match(TOKEN_PRINT)) {
 		printStatement();
+	}
+	else {
+		expressionStatement();
 	}
 }
 
@@ -322,8 +331,6 @@ bool compile(const char* source, Chunk* chunk) {
 	while (!match(TOKEN_EOF)) {
 		declaration();
 	}
-	/*expression();
-	consume(TOKEN_EOF, "Expect end of expression.");*/
 	endCompiler();
 	return !parser.hadError;
 
