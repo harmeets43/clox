@@ -129,6 +129,16 @@ static InterpretResult run() {
 			push(value);
 			break;
 		}
+		case OP_SET_GLOBAL: {
+			ObjString* name = READ_STRING();
+			if (tableSet(&vm.globals, name, peek(0))) {
+				tableDelete(&vm.globals, name);
+				runtimeError("Undefined variable '%s'.", name->chars);
+				return INTERPRET_RUNTIME_ERROR;
+			}
+			//no poping here as this might be used in a bigger expression.
+			break;
+		}
 		case OP_EQUAL: {
 			Value b = pop();
 			Value a = pop();
