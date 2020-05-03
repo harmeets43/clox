@@ -13,6 +13,8 @@ typedef struct {
 
 	Value stack[STACK_MAX];
 	Value* stackTop;
+	// pointer to head node in the objects linked list.
+	Obj* objects;
 }VM;
 
 typedef enum {
@@ -20,6 +22,8 @@ typedef enum {
 	INTERPRET_COMPILE_ERROR,
 	INTERPRET_RUNTIME_ERROR,
 }InterpretResult;
+
+extern VM vm;
 
 void initVM();
 void freeVM();

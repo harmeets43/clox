@@ -13,8 +13,10 @@ typedef enum {
     OBJ_STRING,
 } ObjType;
 
+// Intrusive linked list example.
 struct sObj {
     ObjType type;
+    struct sObj* next;
 };
 
 
