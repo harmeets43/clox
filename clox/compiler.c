@@ -1,7 +1,8 @@
 #include <stdio.h>                
 #include <string.h>
 #include "common.h"               
-#include "compiler.h"             
+#include "compiler.h" 
+#include "memory.h"
 #include "scanner.h"
 #include <stdlib.h>
 #ifdef DEBUG_PRINT_CODE
@@ -877,4 +878,12 @@ ObjFunction* compile(const char* source) {
 	endCompiler();
 	//return !parser.hadError;
 
+}
+
+void markCompilerRoots() {
+	Compiler* compiler = current;
+	while (compiler != NULL) {
+		markObject((Obj*)compiler->function);
+		compiler = compiler->enclosing;
+	}
 }
